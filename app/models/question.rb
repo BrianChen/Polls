@@ -3,6 +3,18 @@ class Question < ActiveRecord::Base
   validates :text, presence: true
 
   def results
+    #Calculate counts server-side
+    # answer_choices.joins(<<-SQL
+    #   LEFT OUTER JOIN
+    #     responses
+    #   ON responses.answer_choice_id = answer_choices.id
+    # SQL
+    # ).select(<<-SQL
+    #   answer_choices.id, answer_choices.text,
+    #   count(responses.id) AS answer_count
+    # SQL
+    # ).group(:id, :text)
+
     query_results = self.responses.includes(:answer_choice)
     result = Hash.new(0)
     query_results.each do |row|
